@@ -34,8 +34,10 @@ const userSchema = mongoose.Schema({
     },
     address: {
         type: String
+    },
+    address_detail : {
+        type: String
     }
-   
 });
 
 // 비밀번호 암호화
