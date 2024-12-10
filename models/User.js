@@ -28,28 +28,14 @@ const userSchema = mongoose.Schema({
         type: String,
         default: "3",
     },
-    company: {
-        type: String,
-        maxlength: 100, // 예시로 최대 길이 설정
-        default: '', // 기본값 빈 문자열
-    },
-    position: {
-        type: String,
-        maxlength: 100, // 예시로 최대 길이 설정
-        default: '', // 기본값 빈 문자열
-    },
-    team: {
-        type: String,
-        maxlength: 100, // 예시로 최대 길이 설정
-        default: '', // 기본값 빈 문자열
-    },
     created_at: {
         type: Date,
         default: Date.now, // 기본값으로 생성된 날짜를 사용
     },
-   role: {
-    type: String,
-   }
+    address: {
+        type: String
+    }
+   
 });
 
 // 비밀번호 암호화

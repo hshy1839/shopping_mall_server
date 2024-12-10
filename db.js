@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    mongoose.connect('mongodb://nuggiy:f2SbBZYbYo4U5cLU@undefined/?replicaSet=atlas-cg17lz-shard-0&ssl=true&authSource=admin', {
+    mongoose.connect('mongodb+srv://nuggiy:uNnrfEKHqxKEwBFT@cluster0s.kz9wc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0s', {
       
       tlsInsecure: true, // SSL/TLS 문제 해결
       family: 4,         // IPv4 강제 사용

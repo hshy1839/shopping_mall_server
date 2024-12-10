@@ -10,13 +10,12 @@ const JWT_SECRET = 'jm-attendance';
 
 
 const userRoutes = require('./routes/userRoutes');
-const statusRoutes = require('./routes/statusRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
 
 
 app.use(cors({
@@ -27,12 +26,11 @@ app.use(cors({
 }));
 
 app.listen(8863, () => {
-  console.log('listening to http://192.168.25.24:8863');
+  console.log('listening to http://192.168.25.31:8863');
 });
 
 connectDB();
 
 app.use('/api/users', userRoutes);
-app.use('/api/users', statusRoutes);
 app.use('/api/users', noticeRoutes);
 
