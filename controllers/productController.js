@@ -4,6 +4,7 @@ const JWT_SECRET = 'jm_shoppingmall';
 const mongoose = require("mongoose");
 
 // 제품 추가
+// 제품 추가
 exports.createProduct = async (req, res) => {
     console.log(req.body);
     try {
@@ -12,7 +13,7 @@ exports.createProduct = async (req, res) => {
       if (!token) {
         return res.status(403).json({ success: false, message: 'Token is required' });
       }
-  
+
       // JWT 토큰 검증
       let decoded;
       try {
@@ -21,33 +22,33 @@ exports.createProduct = async (req, res) => {
         console.error('Token verification failed:', err);
         return res.status(401).json({ success: false, message: 'Invalid or expired token' });
       }
-  
+
       // 토큰 검증 후 userId가 없는 경우 처리
       if (!decoded || !decoded.userId) {
         return res.status(401).json({ success: false, message: 'Token does not contain userId' });
       }
-  
+
       // 클라이언트에서 보낸 데이터 추출
-      const { name, category, price, description, stock, gender, size } = req.body;
+      const { name, category, price, description, gender, size, sizeStock } = req.body;
       const images = req.files ? req.files.map(file => file.path) : [];  // 이미지 파일 배열
       const mainImage = req.file ? req.file.path : '';  // 대표 이미지
-  
+
       // 새로운 제품 객체 생성
       const product = new Product({
         name,
         category,
         price,
         description,
-        stock,
         gender,
         size,
+        sizeStock,  // 사이즈별 재고 추가
         mainImage,
         images,  // 추가 이미지들
       });
-  
+
       // 제품 DB에 저장
       const createProduct = await product.save();
-  
+
       // 제품 저장 성공 시 응답
       return res.status(200).json({
         success: true,
@@ -55,7 +56,7 @@ exports.createProduct = async (req, res) => {
       });
     } catch (err) {
       console.error('상품 등록 실패:', err);
-  
+
       // 중복 키 에러 처리 (예: 이름이 중복되는 경우)
       if (err.code === 11000) {
         const duplicatedField = Object.keys(err.keyPattern)[0];
@@ -64,7 +65,7 @@ exports.createProduct = async (req, res) => {
           message: `이미 사용 중인 ${duplicatedField}입니다.`,
         });
       }
-  
+
       // 기타 오류 처리
       return res.status(500).json({
         success: false,
@@ -72,7 +73,8 @@ exports.createProduct = async (req, res) => {
         error: err.message,
       });
     }
-  };
+};
+
 
 // 모든 제품 조회
 exports.getAllProducts = async (req, res) => {
@@ -175,7 +177,7 @@ exports.deleteProduct = async (req, res) => {
 // 제품 수정
 exports.updateProduct = async (req, res) => {
     const { id } = req.params;  // URL 파라미터로 받은 제품 ID
-    const { name, description, price, category } = req.body;  // 수정할 이름, 설명, 가격, 카테고리
+    const { name, description, price, category, sizeStock } = req.body;  // 수정할 정보 (사이즈별 재고 추가)
 
     // Authorization 헤더에서 토큰 추출
     const token = req.headers.authorization?.split(' ')[1];
@@ -189,17 +191,24 @@ exports.updateProduct = async (req, res) => {
         const userId = decoded.userId;
 
         // 유저가 제품 수정 권한을 가지고 있는지 확인
-        // (예시: 제품 작성자만 수정 가능하도록 조건을 추가할 수 있음)
         const product = await Product.findById(id);
         if (!product) {
             return res.status(404).json({ success: false, message: '제품을 찾을 수 없습니다.' });
         }
 
-        // 수정된 이름, 설명, 가격, 카테고리 업데이트
+        // 수정된 이름, 설명, 가격, 카테고리, 사이즈별 재고 업데이트
         product.name = name;
         product.description = description;
         product.price = price;
         product.category = category;
+
+        // 사이즈별 재고 업데이트 (기존 값이 없으면 0으로 초기화)
+        if (sizeStock) {
+            product.sizeStock.S = sizeStock.S || 0;
+            product.sizeStock.M = sizeStock.M || 0;
+            product.sizeStock.L = sizeStock.L || 0;
+            product.sizeStock.XL = sizeStock.XL || 0;
+        }
 
         // 제품 저장
         await product.save();
