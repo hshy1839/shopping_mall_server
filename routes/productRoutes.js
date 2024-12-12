@@ -15,15 +15,15 @@ router.use((req, res, next) => {
     next();
 });
 
-// 공지사항 추가
+// 상품 추가
 router.post('/products/productCreate', createProduct);
-// 공지사항 목록 조회
-router.get('/products', getAllProducts);
-// 공지사항 특정 조회
-router.get('/products/:id', getProduct);
-// 공지사항 삭제
+// 상품 목록 조회
+router.get('/products/allProduct', getAllProducts);
+// 상품 특정 조회
+router.get('/products/Product/:id', getProduct);
+// 상품 삭제
 router.delete('/products/delete/:id', deleteProduct);
-// 공지사항 수정
+// 상품 수정
 router.put('/products/update/:id', updateProduct);
 
 module.exports = router;
