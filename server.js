@@ -6,11 +6,12 @@ const connectDB = require('./db');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
-const JWT_SECRET = 'jm-attendance'; 
+const JWT_SECRET = 'jm_shoppingmall'; 
 
 
 const userRoutes = require('./routes/userRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 
 
@@ -33,4 +34,5 @@ connectDB();
 
 app.use('/api/users', userRoutes);
 app.use('/api/users', noticeRoutes);
+app.use('/api', productRoutes);
 

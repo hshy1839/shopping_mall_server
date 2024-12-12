@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/User');
-const JWT_SECRET = 'jm-attendance';
+const JWT_SECRET = 'jm_shoppingmall';
 
 // 로그인 컨트롤러
 exports.loginUser = async (req, res) => {
@@ -20,8 +20,14 @@ exports.loginUser = async (req, res) => {
         message: '비밀번호가 틀렸습니다',
       });
     }
+    if (!user.is_active) {ㅁ
+      return res.json({
+        loginSuccess: false,
+        message: '승인 대기 중입니다.',
+      });
+    } 
+
     
-    console.log('login 성공');
     const token = jwt.sign(
       { userId: user._id, username: user.username, phoneNumber: user.phoneNumber },
       JWT_SECRET,
@@ -29,6 +35,7 @@ exports.loginUser = async (req, res) => {
     );
 
     res.status(200).json({ loginSuccess: true, token });
+    console.log('login 성공');
   } catch (err) {
     console.error('로그인 실패:', err);
     res.status(400).send(err);

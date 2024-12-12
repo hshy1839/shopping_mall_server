@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { Notice } = require('../models/Notice');
-const JWT_SECRET = 'jm-attendance';
+const JWT_SECRET = 'jm_shoppingmall';
 const mongoose = require("mongoose");
 
 // 공지사항 추가
